@@ -1,13 +1,15 @@
 import { api } from '@/data/api'
 import { Product } from '@/data/types/products'
+import { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 
 async function getFeaturedProducts(): Promise<Product[]> {
+
   const response = await api('/products/featured', {
     // cache: 'no-store', // no-cache forçar o navegador a fazer uma nova requisição
     next: {
-      revalidate: 60 * 60  // 1 hora
+      revalidate: 60 * 60,  // 1 hora
     } // fazer a requisição no servidor a cada 1 hora
   })
 
@@ -16,16 +18,20 @@ async function getFeaturedProducts(): Promise<Product[]> {
   return products
 }
 
+export const metadata: Metadata = {
+  title: 'Home',
+}
+
 export default async function Home() {
 
   const [highLigthProduct, ...otherProducts] = await getFeaturedProducts()
 
+  await new Promise((resolve) => setTimeout(resolve, 3000))
 
-  
   return (
-    <div className="grid max-w-[860px] grid-cols-9 grid-rows-6 gap-6">
+    <div className="grid max-h-[860px] grid-cols-9 grid-rows-6 gap-6">
       <Link
-        href={`/products/${highLigthProduct.slug}`}
+        href={`/product/${highLigthProduct.slug}`}
         className="group relative col-span-6 row-span-6 rounded-lg bg-zinc-900 overflow-hidden flex justify-center"
       >
         <Image
@@ -53,7 +59,7 @@ export default async function Home() {
       {otherProducts.map((product) => (
         <Link
           key={product.id}
-          href={`/products/${product.slug}`}
+          href={`/product/${product.slug}`}
           className="group relative col-span-3 row-span-3 rounded-lg bg-zinc-900 overflow-hidden flex justify-center"
         >
           <Image
