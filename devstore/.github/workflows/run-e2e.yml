@@ -23,4 +23,4 @@ jobs:
           NEXT_PUBLIC_API_BASE_URL: "https://ignite-devstore-api-eight-chi.vercel.app"
         with:
           build: npm run build
-          start: npm run start
+          start: npm  start
